@@ -4,7 +4,7 @@ import 'dart:ui';
 class GlassmorphicContainer extends StatelessWidget {
   final Widget child;
   final double width;
-  final double height;
+  final double? height; // Make height nullable
   final double borderRadius;
   final double blur;
   final double opacity;
@@ -16,7 +16,7 @@ class GlassmorphicContainer extends StatelessWidget {
     Key? key,
     required this.child,
     this.width = double.infinity,
-    this.height = double.infinity,
+    this.height, // No default value, will size to content
     this.borderRadius = 32,
     this.blur = 16,
     this.opacity = 0.08,
@@ -33,7 +33,7 @@ class GlassmorphicContainer extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
         child: Container(
           width: width,
-          height: height,
+          height: height, // Height will be null and container will size to content
           padding: padding,
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(opacity),

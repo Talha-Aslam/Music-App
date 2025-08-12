@@ -87,10 +87,11 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen>
         : null;
 
     return Center(
-      child: GlassmorphicContainer(
-        width: 380,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+      child: SingleChildScrollView(
+        child: GlassmorphicContainer(
+          width: 380,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
           children: [
             // Animated Album Art
             AnimatedSwitcher(
@@ -210,6 +211,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen>
             ),
           ],
         ),
+      ),
       ),
     );
   }
