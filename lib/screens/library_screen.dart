@@ -213,7 +213,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 song.title ?? song.name,
                 style: TextStyle(
                   color: isCurrentSong ? Colors.blueAccent : Colors.white,
-                  fontWeight: isCurrentSong ? FontWeight.bold : FontWeight.normal,
+                  fontWeight:
+                      isCurrentSong ? FontWeight.bold : FontWeight.normal,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -247,7 +248,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 ],
               ),
               onTap: () async {
-                final originalIndex = widget.audioService.playlist.indexOf(song);
+                final originalIndex =
+                    widget.audioService.playlist.indexOf(song);
                 await widget.audioService.loadSong(originalIndex);
                 widget.audioService.play();
               },
@@ -281,7 +283,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.queue_music, color: Colors.white),
-              title: const Text('Add to Queue', style: TextStyle(color: Colors.white)),
+              title: const Text('Add to Queue',
+                  style: TextStyle(color: Colors.white)),
               onTap: () {
                 Navigator.pop(context);
                 // Add to queue functionality would go here
@@ -289,7 +292,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.favorite_border, color: Colors.white),
-              title: const Text('Add to Favorites', style: TextStyle(color: Colors.white)),
+              title: const Text('Add to Favorites',
+                  style: TextStyle(color: Colors.white)),
               onTap: () {
                 Navigator.pop(context);
                 // Add to favorites functionality would go here

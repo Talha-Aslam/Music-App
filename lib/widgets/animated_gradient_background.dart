@@ -23,7 +23,7 @@ class _AnimatedGradientBackgroundState extends State<AnimatedGradientBackground>
   @override
   void initState() {
     super.initState();
-    
+
     // Main gradient animation
     _controller = AnimationController(
       vsync: this,
@@ -36,7 +36,8 @@ class _AnimatedGradientBackgroundState extends State<AnimatedGradientBackground>
       vsync: this,
       duration: const Duration(seconds: 15),
     )..repeat(reverse: true);
-    _secondaryAnimation = CurvedAnimation(parent: _secondaryController, curve: Curves.easeInOut);
+    _secondaryAnimation =
+        CurvedAnimation(parent: _secondaryController, curve: Curves.easeInOut);
   }
 
   @override
@@ -83,7 +84,7 @@ class _AnimatedGradientBackgroundState extends State<AnimatedGradientBackground>
               );
             },
           ),
-          
+
           // Secondary overlay gradient for depth
           AnimatedBuilder(
             animation: _secondaryAnimation,
@@ -155,7 +156,7 @@ class _AnimatedGradientBackgroundState extends State<AnimatedGradientBackground>
               );
             },
           ),
-          
+
           // Content with safe area
           SafeArea(
             child: widget.child,

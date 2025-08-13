@@ -16,8 +16,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with TickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late AnimationController _scaleController;
   late Animation<double> _scaleAnimation;
 
@@ -28,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen>
       vsync: this,
       duration: const Duration(milliseconds: 2000),
     );
-    
+
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
       CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
     );
@@ -52,247 +51,258 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: AnimationLimiter(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header with animated greeting
-              AnimationConfiguration.staggeredList(
-                position: 0,
-                duration: const Duration(milliseconds: 800),
-                child: SlideAnimation(
-                  verticalOffset: -50.0,
-                  child: FadeInAnimation(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 20),
-                        Row(
+        backgroundColor: Colors.transparent,
+        body: AnimationLimiter(
+          child: SingleChildScrollView(
+            // Make the entire body scrollable
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                  20.0, 20.0, 20.0, 120.0), // Added bottom padding for nav bar
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header with animated greeting
+                  AnimationConfiguration.staggeredList(
+                    position: 0,
+                    duration: const Duration(milliseconds: 800),
+                    child: SlideAnimation(
+                      verticalOffset: -50.0,
+                      child: FadeInAnimation(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  AnimatedTextKit(
-                                    animatedTexts: [
-                                      TypewriterAnimatedText(
-                                        _getGreeting(),
-                                        textStyle: GoogleFonts.poppins(
-                                          fontSize: 28,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white,
+                            const SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      AnimatedTextKit(
+                                        animatedTexts: [
+                                          TypewriterAnimatedText(
+                                            _getGreeting(),
+                                            textStyle: GoogleFonts.poppins(
+                                              fontSize: 28,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white,
+                                            ),
+                                            speed: const Duration(
+                                                milliseconds: 100),
+                                          ),
+                                        ],
+                                        totalRepeatCount: 1,
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Shimmer.fromColors(
+                                        baseColor: Colors.white60,
+                                        highlightColor: Colors.white,
+                                        child: Text(
+                                          'Ready to vibe with some music?',
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 16,
+                                            color: Colors.white70,
+                                          ),
                                         ),
-                                        speed: const Duration(milliseconds: 100),
                                       ),
                                     ],
-                                    totalRepeatCount: 1,
                                   ),
-                                  const SizedBox(height: 8),
-                                  Shimmer.fromColors(
-                                    baseColor: Colors.white60,
-                                    highlightColor: Colors.white,
-                                    child: Text(
-                                      'Ready to vibe with some music?',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 16,
-                                        color: Colors.white70,
+                                ),
+                                // Animated music icon
+                                ScaleTransition(
+                                  scale: _scaleAnimation,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Colors.white.withOpacity(0.2),
+                                          Colors.white.withOpacity(0.1),
+                                        ],
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            // Animated music icon
-                            ScaleTransition(
-                              scale: _scaleAnimation,
-                              child: Container(
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Colors.white.withOpacity(0.2),
-                                      Colors.white.withOpacity(0.1),
-                                    ],
+                                    child: const Icon(
+                                      Icons.music_note_rounded,
+                                      color: Colors.white,
+                                      size: 30,
+                                    ),
                                   ),
                                 ),
-                                child: const Icon(
-                                  Icons.music_note_rounded,
-                                  color: Colors.white,
-                                  size: 30,
-                                ),
-                              ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              ),
 
-              const SizedBox(height: 40),
+                  const SizedBox(height: 40),
 
-              // Quick Actions Grid
-              Expanded(
-                flex: 3, // Give more space to the grid
-                child: AnimationLimiter(
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 1.1, // Make cells slightly taller
-                    children: [
-                      // Shuffle All
-                      AnimationConfiguration.staggeredGrid(
-                        position: 0,
-                        columnCount: 2,
-                        duration: const Duration(milliseconds: 800),
-                        child: SlideAnimation(
-                          verticalOffset: 50.0,
-                          child: FadeInAnimation(
-                            child: _buildActionCard(
-                              icon: Icons.shuffle_rounded,
-                              title: 'Shuffle All',
-                              subtitle: 'Random vibes',
-                              gradientColors: [
-                                Colors.orange.withOpacity(0.8),
-                                Colors.red.withOpacity(0.6),
-                              ],
-                              onTap: () => widget.audioService.shufflePlaylist(),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      // Favorites
-                      AnimationConfiguration.staggeredGrid(
-                        position: 1,
-                        columnCount: 2,
-                        duration: const Duration(milliseconds: 800),
-                        child: SlideAnimation(
-                          verticalOffset: 50.0,
-                          child: FadeInAnimation(
-                            child: _buildActionCard(
-                              icon: Icons.favorite_rounded,
-                              title: 'Favorites',
-                              subtitle: 'Your loves',
-                              gradientColors: [
-                                Colors.pink.withOpacity(0.8),
-                                Colors.purple.withOpacity(0.6),
-                              ],
-                              onTap: () {
-                                // Navigate to favorites
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      // Add Music
-                      AnimationConfiguration.staggeredGrid(
-                        position: 2,
-                        columnCount: 2,
-                        duration: const Duration(milliseconds: 800),
-                        child: SlideAnimation(
-                          verticalOffset: 50.0,
-                          child: FadeInAnimation(
-                            child: _buildActionCard(
-                              icon: Icons.add_rounded,
-                              title: 'Add Music',
-                              subtitle: 'Import songs',
-                              gradientColors: [
-                                Colors.green.withOpacity(0.8),
-                                Colors.teal.withOpacity(0.6),
-                              ],
-                              onTap: () => widget.audioService.pickAndLoadSongs(),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      // Browse Library
-                      AnimationConfiguration.staggeredGrid(
-                        position: 3,
-                        columnCount: 2,
-                        duration: const Duration(milliseconds: 800),
-                        child: SlideAnimation(
-                          verticalOffset: 50.0,
-                          child: FadeInAnimation(
-                            child: _buildActionCard(
-                              icon: Icons.library_music_rounded,
-                              title: 'Library',
-                              subtitle: 'Browse all',
-                              gradientColors: [
-                                Colors.blue.withOpacity(0.8),
-                                Colors.indigo.withOpacity(0.6),
-                              ],
-                              onTap: () {
-                                // Navigate to library tab
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              // Recently Played Section
-              Container(
-                height: 160, // Fixed height to prevent overflow
-                child: AnimationConfiguration.staggeredList(
-                  position: 4,
-                  duration: const Duration(milliseconds: 800),
-                  child: SlideAnimation(
-                    verticalOffset: 50.0,
-                    child: FadeInAnimation(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  // Quick Actions Grid
+                  SizedBox(
+                    height: 280, // Fixed height for grid
+                    child: AnimationLimiter(
+                      child: GridView.count(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                        childAspectRatio: 1.1, // Make cells slightly taller
                         children: [
-                          Text(
-                            'Recently Played',
-                            style: GoogleFonts.poppins(
-                              fontSize: 18, // Slightly smaller
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
+                          // Shuffle All
+                          AnimationConfiguration.staggeredGrid(
+                            position: 0,
+                            columnCount: 2,
+                            duration: const Duration(milliseconds: 800),
+                            child: SlideAnimation(
+                              verticalOffset: 50.0,
+                              child: FadeInAnimation(
+                                child: _buildActionCard(
+                                  icon: Icons.shuffle_rounded,
+                                  title: 'Shuffle All',
+                                  subtitle: 'Random vibes',
+                                  gradientColors: [
+                                    Colors.orange.withOpacity(0.8),
+                                    Colors.red.withOpacity(0.6),
+                                  ],
+                                  onTap: () =>
+                                      widget.audioService.shufflePlaylist(),
+                                ),
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 12), // Reduced spacing
-                          Expanded( // Use Expanded to fill remaining space
-                            child: StreamBuilder<List<String>>(
-                              stream: widget.audioService.songsStream,
-                              builder: (context, snapshot) {
-                                if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                                  return _buildEmptyState();
-                                }
-                                
-                                return ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: snapshot.data!.length.clamp(0, 5),
-                                  itemBuilder: (context, index) {
-                                    final song = snapshot.data![index];
-                                    return _buildRecentlyPlayedCard(song, index);
+
+                          // Favorites
+                          AnimationConfiguration.staggeredGrid(
+                            position: 1,
+                            columnCount: 2,
+                            duration: const Duration(milliseconds: 800),
+                            child: SlideAnimation(
+                              verticalOffset: 50.0,
+                              child: FadeInAnimation(
+                                child: _buildActionCard(
+                                  icon: Icons.favorite_rounded,
+                                  title: 'Favorites',
+                                  subtitle: 'Your loves',
+                                  gradientColors: [
+                                    Colors.pink.withOpacity(0.8),
+                                    Colors.purple.withOpacity(0.6),
+                                  ],
+                                  onTap: () {
+                                    // Navigate to favorites
                                   },
-                                );
-                              },
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          // Add Music
+                          AnimationConfiguration.staggeredGrid(
+                            position: 2,
+                            columnCount: 2,
+                            duration: const Duration(milliseconds: 800),
+                            child: SlideAnimation(
+                              verticalOffset: 50.0,
+                              child: FadeInAnimation(
+                                child: _buildActionCard(
+                                  icon: Icons.add_rounded,
+                                  title: 'Add Music',
+                                  subtitle: 'Import songs',
+                                  gradientColors: [
+                                    Colors.green.withOpacity(0.8),
+                                    Colors.teal.withOpacity(0.6),
+                                  ],
+                                  onTap: () =>
+                                      widget.audioService.pickAndLoadSongs(),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          // Browse Library
+                          AnimationConfiguration.staggeredGrid(
+                            position: 3,
+                            columnCount: 2,
+                            duration: const Duration(milliseconds: 800),
+                            child: SlideAnimation(
+                              verticalOffset: 50.0,
+                              child: FadeInAnimation(
+                                child: _buildActionCard(
+                                  icon: Icons.library_music_rounded,
+                                  title: 'Library',
+                                  subtitle: 'Browse all',
+                                  gradientColors: [
+                                    Colors.blue.withOpacity(0.8),
+                                    Colors.indigo.withOpacity(0.6),
+                                  ],
+                                  onTap: () {
+                                    // Navigate to library tab
+                                  },
+                                ),
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
                   ),
-                ),
+
+                  // Recently Played Section
+                  Container(
+                    height: 160, // Increased height to prevent overflow
+                    child: AnimationConfiguration.staggeredList(
+                      position: 4,
+                      duration: const Duration(milliseconds: 800),
+                      child: SlideAnimation(
+                        verticalOffset: 50.0,
+                        child: FadeInAnimation(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Recently Played',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 18, // Slightly smaller
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 12), // Reduced spacing
+                              Expanded(
+                                // Use Expanded to fill remaining space
+                                child: StreamBuilder<List<String>>(
+                                  stream: widget.audioService.songsStream,
+                                  builder: (context, snapshot) {
+                                    if (!snapshot.hasData ||
+                                        snapshot.data!.isEmpty) {
+                                      return _buildEmptyState();
+                                    }
+
+                                    return ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount:
+                                          snapshot.data!.length.clamp(0, 5),
+                                      itemBuilder: (context, index) {
+                                        final song = snapshot.data![index];
+                                        return _buildRecentlyPlayedCard(
+                                            song, index);
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   Widget _buildActionCard({
@@ -375,7 +385,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _buildRecentlyPlayedCard(String song, int index) {
     final fileName = song.split('/').last.replaceAll('.mp3', '');
-    
+
     return AnimationConfiguration.staggeredList(
       position: index,
       duration: const Duration(milliseconds: 600),
@@ -387,22 +397,23 @@ class _HomeScreenState extends State<HomeScreen>
             margin: const EdgeInsets.only(right: 12),
             child: gc.GlassmorphicContainer(
               width: 100,
-              height: 100, // Reduced height
+              height: 90, // Further reduced height
               child: Padding(
-                padding: const EdgeInsets.all(8), // Reduced padding
+                padding: const EdgeInsets.all(6), // Minimal padding
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min, // Minimize size
                   children: [
                     const Icon(
                       Icons.music_note_rounded,
-                      size: 24, // Smaller icon
+                      size: 20, // Smaller icon
                       color: Colors.white,
                     ),
-                    const SizedBox(height: 6), // Reduced spacing
+                    const SizedBox(height: 4), // Minimal spacing
                     Text(
                       fileName,
                       style: GoogleFonts.poppins(
-                        fontSize: 9, // Smaller font
+                        fontSize: 8, // Much smaller font
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
                       ),
@@ -424,31 +435,28 @@ class _HomeScreenState extends State<HomeScreen>
     return Center(
       child: gc.GlassmorphicContainer(
         width: double.infinity,
-        height: 100, // Reduced height
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.music_off_rounded,
-              size: 32, // Smaller icon
-              color: Colors.white54,
-            ),
-            const SizedBox(height: 6), // Reduced spacing
-            Text(
-              'No music yet',
-              style: GoogleFonts.poppins(
-                fontSize: 12, // Smaller font
-                color: Colors.white70,
-              ),
-            ),
-            Text(
-              'Add some songs to get started',
-              style: GoogleFonts.poppins(
-                fontSize: 9, // Smaller font
+        height: null, // Let it size itself
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min, // Important: minimize size
+            children: [
+              const Icon(
+                Icons.music_off_rounded,
+                size: 24, // Even smaller icon
                 color: Colors.white54,
               ),
-            ),
-          ],
+              const SizedBox(height: 8), // Small spacing
+              Text(
+                'No music yet',
+                style: GoogleFonts.poppins(
+                  fontSize: 10, // Smaller font
+                  color: Colors.white70,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

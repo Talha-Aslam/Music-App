@@ -43,9 +43,11 @@ class _QueueManagerWidgetState extends State<QueueManagerWidget> {
 
           // Playlist Items with Reordering
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.4, // Fixed height instead of constraints
+            height: MediaQuery.of(context).size.height *
+                0.4, // Fixed height instead of constraints
             child: ReorderableListView.builder(
-              shrinkWrap: false, // Don't use shrinkWrap with a fixed height container
+              shrinkWrap:
+                  false, // Don't use shrinkWrap with a fixed height container
               itemCount: playlist.length,
               itemBuilder: (context, index) {
                 final song = playlist[index];

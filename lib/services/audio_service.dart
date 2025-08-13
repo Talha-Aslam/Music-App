@@ -14,9 +14,10 @@ class AudioService {
   // For audio visualization (simulated for now)
   final math.Random _random = math.Random();
   final List<double> _fftData = List.filled(128, 0.0);
-  
+
   // Stream for songs list
-  final BehaviorSubject<List<String>> _songsController = BehaviorSubject<List<String>>.seeded([]);
+  final BehaviorSubject<List<String>> _songsController =
+      BehaviorSubject<List<String>>.seeded([]);
   Stream<List<String>> get songsStream => _songsController.stream;
 
   // Stream getters for UI to listen to
@@ -38,7 +39,7 @@ class AudioService {
       playlist =
           result.files.map((file) => Song.fromPlatformFile(file)).toList();
       currentIndex = 0;
-      
+
       // Update songs stream
       _songsController.add(playlist.map((song) => song.path).toList());
 
@@ -80,16 +81,18 @@ class AudioService {
     try {
       // Extract the song name from the filename
       final songFilename = playlist[currentIndex].name;
-      
+
       // Remove file extension to get cleaner song title
-      final songTitle = songFilename.split('.').first
+      final songTitle = songFilename
+          .split('.')
+          .first
           .replaceAll('_', ' ')
           .replaceAll('-', ' - ');
-      
+
       // Set basic metadata
       playlist[currentIndex].title = songTitle;
       playlist[currentIndex].artist = "Unknown Artist";
-      
+
       // Note: We're not setting album art here anymore
       // Instead, we'll use the AlbumArtGenerator in the UI
     } catch (e) {

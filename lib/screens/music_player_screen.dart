@@ -10,7 +10,7 @@ import '../utils/helpers/album_art_generator.dart';
 
 class MusicPlayerScreen extends StatefulWidget {
   final AudioService? audioService;
-  
+
   const MusicPlayerScreen({Key? key, this.audioService}) : super(key: key);
 
   @override
@@ -29,7 +29,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen>
   @override
   void initState() {
     super.initState();
-    
+
     // Use provided audioService or create a new one
     _audioService = widget.audioService ?? AudioService();
 
@@ -100,126 +100,126 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen>
           width: 380,
           child: Column(
             mainAxisSize: MainAxisSize.min,
-          children: [
-            // Animated Album Art
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 600),
-              child: currentSong != null
-                  ? ClipRRect(
-                      key: ValueKey(currentSong.path),
-                      borderRadius: BorderRadius.circular(24),
-                      child: AlbumArtGenerator.getPlaceholderWidget(
-                        currentSong.name,
-                        size: 160,
-                      ),
-                    )
-                  : Container(
-                      width: 160,
-                      height: 160,
-                      decoration: BoxDecoration(
+            children: [
+              // Animated Album Art
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 600),
+                child: currentSong != null
+                    ? ClipRRect(
+                        key: ValueKey(currentSong.path),
                         borderRadius: BorderRadius.circular(24),
-                        gradient: LinearGradient(
-                          colors: [Colors.purpleAccent, Colors.blueAccent],
+                        child: AlbumArtGenerator.getPlaceholderWidget(
+                          currentSong.name,
+                          size: 160,
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.purple.withOpacity(0.3),
-                            blurRadius: 16,
-                            offset: const Offset(0, 4),
+                      )
+                    : Container(
+                        width: 160,
+                        height: 160,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(24),
+                          gradient: LinearGradient(
+                            colors: [Colors.purpleAccent, Colors.blueAccent],
                           ),
-                        ],
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.purple.withOpacity(0.3),
+                              blurRadius: 16,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(Icons.music_note_rounded,
+                            size: 64, color: Colors.white),
                       ),
-                      child: const Icon(Icons.music_note_rounded,
-                          size: 64, color: Colors.white),
-                    ),
-            ),
-            const SizedBox(height: 24),
-
-            // Song Info
-            Text(
-              currentSong?.title ?? 'No Song Selected',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white.withOpacity(0.95),
-                letterSpacing: 1.2,
               ),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              currentSong?.artist ?? 'Unknown Artist',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white.withOpacity(0.7),
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 16),
+              const SizedBox(height: 24),
 
-            // Audio Visualizer
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: AudioVisualizer(
-                isPlaying: _isPlaying,
-                color: _getVisualizerColor(currentSong),
-                intensity: _isPlaying ? 1.0 : 0.5,
-                barCount: 24, // More bars for smoother visualization
-                audioData: _isPlaying ? _audioData : null,
-              ),
-            ),
-            const SizedBox(height: 14),
-
-            // Select Music Button
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white.withOpacity(0.12),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+              // Song Info
+              Text(
+                currentSong?.title ?? 'No Song Selected',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white.withOpacity(0.95),
+                  letterSpacing: 1.2,
                 ),
-                elevation: 0,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-              onPressed: () async {
-                await _audioService.pickFiles();
-                setState(() {}); // Refresh UI after picking files
-              },
-              child: const Text('Pick Music Files'),
-            ),
-            const SizedBox(height: 24),
-
-            // Playlist ListView
-            if (_audioService.playlist.isNotEmpty) _buildPlaylist(),
-            const SizedBox(height: 16),
-
-            // Player Controls
-            PlayerControls(audioService: _audioService),
-            const SizedBox(height: 16),
-
-            // Queue Button
-            if (_audioService.playlist.isNotEmpty)
-              TextButton.icon(
-                icon: const Icon(Icons.queue_music),
-                label: const Text('Queue'),
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.white70,
+              const SizedBox(height: 8),
+              Text(
+                currentSong?.artist ?? 'Unknown Artist',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white.withOpacity(0.7),
                 ),
-                onPressed: () => _showQueueManager(context),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-            const SizedBox(height: 8),
+              const SizedBox(height: 16),
 
-            // Progress Bar
-            ProgressBar(
-              audioService: _audioService,
-              position: _position,
-              duration: _duration,
-            ),
-          ],
+              // Audio Visualizer
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: AudioVisualizer(
+                  isPlaying: _isPlaying,
+                  color: _getVisualizerColor(currentSong),
+                  intensity: _isPlaying ? 1.0 : 0.5,
+                  barCount: 24, // More bars for smoother visualization
+                  audioData: _isPlaying ? _audioData : null,
+                ),
+              ),
+              const SizedBox(height: 14),
+
+              // Select Music Button
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white.withOpacity(0.12),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  elevation: 0,
+                ),
+                onPressed: () async {
+                  await _audioService.pickFiles();
+                  setState(() {}); // Refresh UI after picking files
+                },
+                child: const Text('Pick Music Files'),
+              ),
+              const SizedBox(height: 24),
+
+              // Playlist ListView
+              if (_audioService.playlist.isNotEmpty) _buildPlaylist(),
+              const SizedBox(height: 16),
+
+              // Player Controls
+              PlayerControls(audioService: _audioService),
+              const SizedBox(height: 16),
+
+              // Queue Button
+              if (_audioService.playlist.isNotEmpty)
+                TextButton.icon(
+                  icon: const Icon(Icons.queue_music),
+                  label: const Text('Queue'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.white70,
+                  ),
+                  onPressed: () => _showQueueManager(context),
+                ),
+              const SizedBox(height: 8),
+
+              // Progress Bar
+              ProgressBar(
+                audioService: _audioService,
+                position: _position,
+                duration: _duration,
+              ),
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
@@ -251,12 +251,17 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen>
 
     // Get base color from song name
     final baseColor = AlbumArtGenerator.getColorFromSongName(song.name);
-    
+
     // Add some animation based on playback position
     final colorList = [
       baseColor,
-      HSLColor.fromColor(baseColor).withHue((HSLColor.fromColor(baseColor).hue + 40) % 360).toColor(),
-      HSLColor.fromColor(baseColor).withLightness((HSLColor.fromColor(baseColor).lightness + 0.1).clamp(0.0, 1.0)).toColor(),
+      HSLColor.fromColor(baseColor)
+          .withHue((HSLColor.fromColor(baseColor).hue + 40) % 360)
+          .toColor(),
+      HSLColor.fromColor(baseColor)
+          .withLightness(
+              (HSLColor.fromColor(baseColor).lightness + 0.1).clamp(0.0, 1.0))
+          .toColor(),
     ];
 
     // Use position to animate through color variations

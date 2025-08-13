@@ -33,7 +33,8 @@ class GlassmorphicContainer extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
         child: Container(
           width: width,
-          height: height, // Height will be null and container will size to content
+          height:
+              height, // Height will be null and container will size to content
           padding: padding,
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(opacity),

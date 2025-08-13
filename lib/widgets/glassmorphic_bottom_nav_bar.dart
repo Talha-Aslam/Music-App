@@ -97,7 +97,7 @@ class GlassmorphicBottomNavBar extends StatelessWidget {
                                   : null,
                             ),
                           ),
-                          
+
                           // Content
                           AnimatedContainer(
                             duration: const Duration(milliseconds: 300),
@@ -119,7 +119,7 @@ class GlassmorphicBottomNavBar extends StatelessWidget {
                                     size: isSelected ? 26 : 22,
                                   ),
                                 ),
-                                
+
                                 // Label with fade animation
                                 const SizedBox(height: 4),
                                 AnimatedOpacity(
@@ -131,8 +131,8 @@ class GlassmorphicBottomNavBar extends StatelessWidget {
                                       color: isSelected
                                           ? Colors.white
                                           : Colors.white.withOpacity(0.5),
-                                      fontWeight: isSelected 
-                                          ? FontWeight.w600 
+                                      fontWeight: isSelected
+                                          ? FontWeight.w600
                                           : FontWeight.w400,
                                       fontSize: isSelected ? 12 : 10,
                                       letterSpacing: 0.5,
@@ -146,7 +146,7 @@ class GlassmorphicBottomNavBar extends StatelessWidget {
                               ],
                             ),
                           ),
-                          
+
                           // Ripple effect overlay
                           if (isSelected)
                             Positioned.fill(

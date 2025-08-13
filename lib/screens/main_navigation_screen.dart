@@ -57,7 +57,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     return Scaffold(
       extendBody: true, // This allows the body to extend behind the bottom nav
       body: SafeArea(
-        bottom: false, // Don't apply safe area to bottom since we have custom nav
+        bottom:
+            false, // Don't apply safe area to bottom since we have custom nav
         child: IndexedStack(
           index: _currentIndex,
           children: [

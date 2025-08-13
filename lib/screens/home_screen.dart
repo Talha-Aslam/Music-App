@@ -45,8 +45,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 const Spacer(),
                 Row(
                   children: [
-                    Icon(Icons.music_note_rounded, 
-                         color: Colors.white.withOpacity(0.8)),
+                    Icon(Icons.music_note_rounded,
+                        color: Colors.white.withOpacity(0.8)),
                     const SizedBox(width: 8),
                     Text(
                       '${widget.audioService.playlist.length} songs in library',
@@ -59,9 +59,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Quick Actions
           Text(
             'Quick Actions',
@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           Row(
             children: [
               Expanded(
@@ -99,9 +99,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           Row(
             children: [
               Expanded(
