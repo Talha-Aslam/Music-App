@@ -142,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
                   // Quick Actions Grid
                   SizedBox(
-                    height: 280, // Fixed height for grid
+                    height: 300, // Fixed height for grid
                     child: AnimationLimiter(
                       child: GridView.count(
                         crossAxisCount: 2,
@@ -247,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       ),
                     ),
                   ),
-
+                  const SizedBox(height: 16),
                   // Recently Played Section
                   Container(
                     height: 160, // Increased height to prevent overflow
@@ -447,7 +447,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 size: 24, // Even smaller icon
                 color: Colors.white54,
               ),
-              const SizedBox(height: 8), // Small spacing
               Text(
                 'No music yet',
                 style: GoogleFonts.poppins(
