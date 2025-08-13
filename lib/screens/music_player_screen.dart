@@ -9,7 +9,9 @@ import '../widgets/queue_manager_widget.dart';
 import '../utils/helpers/album_art_generator.dart';
 
 class MusicPlayerScreen extends StatefulWidget {
-  const MusicPlayerScreen({Key? key}) : super(key: key);
+  final AudioService? audioService;
+  
+  const MusicPlayerScreen({Key? key, this.audioService}) : super(key: key);
 
   @override
   State<MusicPlayerScreen> createState() => _MusicPlayerScreenState();
@@ -17,7 +19,7 @@ class MusicPlayerScreen extends StatefulWidget {
 
 class _MusicPlayerScreenState extends State<MusicPlayerScreen>
     with SingleTickerProviderStateMixin {
-  final AudioService _audioService = AudioService();
+  late AudioService _audioService;
   late AnimationController _visualizerUpdateController;
   Duration _position = Duration.zero;
   Duration _duration = Duration.zero;
@@ -27,6 +29,9 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen>
   @override
   void initState() {
     super.initState();
+    
+    // Use provided audioService or create a new one
+    _audioService = widget.audioService ?? AudioService();
 
     // Create controller for visualization updates
     _visualizerUpdateController = AnimationController(
@@ -76,7 +81,10 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen>
   @override
   void dispose() {
     _visualizerUpdateController.dispose();
-    _audioService.dispose();
+    // Only dispose audioService if we created it locally
+    if (widget.audioService == null) {
+      _audioService.dispose();
+    }
     super.dispose();
   }
 

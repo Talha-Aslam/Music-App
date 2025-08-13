@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'widgets/animated_gradient_background.dart';
-import 'screens/music_player_screen.dart';
+import 'screens/main_navigation_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,7 +47,7 @@ class MusicPlayerPage extends StatelessWidget {
     return Scaffold(
       body: AnimatedGradientBackground(
         child: SafeArea(
-          child: MusicPlayerScreen(),
+          child: MainNavigationScreen(),
         ),
       ),
     );
