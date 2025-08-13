@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:just_audio/just_audio.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:rxdart/rxdart.dart';
 import '../models/song_model.dart';
 
 class AudioService {
@@ -13,6 +14,10 @@ class AudioService {
   // For audio visualization (simulated for now)
   final math.Random _random = math.Random();
   final List<double> _fftData = List.filled(128, 0.0);
+  
+  // Stream for songs list
+  final BehaviorSubject<List<String>> _songsController = BehaviorSubject<List<String>>.seeded([]);
+  Stream<List<String>> get songsStream => _songsController.stream;
 
   // Stream getters for UI to listen to
   Stream<Duration> get positionStream => audioPlayer.positionStream;
@@ -33,6 +38,9 @@ class AudioService {
       playlist =
           result.files.map((file) => Song.fromPlatformFile(file)).toList();
       currentIndex = 0;
+      
+      // Update songs stream
+      _songsController.add(playlist.map((song) => song.path).toList());
 
       if (playlist.isNotEmpty) {
         await loadSong(0);
@@ -40,6 +48,24 @@ class AudioService {
     }
 
     return playlist;
+  }
+
+  // Add convenience method for home screen
+  Future<void> pickAndLoadSongs() async {
+    await pickFiles();
+  }
+
+  // Add shuffle playlist method
+  void shufflePlaylist() {
+    if (playlist.isNotEmpty) {
+      playlist.shuffle();
+      currentIndex = 0;
+      _songsController.add(playlist.map((song) => song.path).toList());
+      if (isPlaying) {
+        loadSong(0);
+        play();
+      }
+    }
   }
 
   Future<void> loadSong(int index) async {
@@ -208,6 +234,7 @@ class AudioService {
   }
 
   void dispose() {
+    _songsController.close();
     audioPlayer.dispose();
   }
 }

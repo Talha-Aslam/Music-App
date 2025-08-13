@@ -16,25 +16,39 @@ class GlassmorphicBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(16),
+      margin: const EdgeInsets.fromLTRB(20, 0, 20, 25),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(30),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+          filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
           child: Container(
-            height: 70,
+            height: 75,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(25),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.white.withOpacity(0.15),
+                  Colors.white.withOpacity(0.05),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(30),
               border: Border.all(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withOpacity(0.25),
                 width: 1.5,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
+                  color: Colors.black.withOpacity(0.15),
                   blurRadius: 30,
-                  offset: const Offset(0, 10),
+                  offset: const Offset(0, 8),
+                  spreadRadius: 0,
+                ),
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 60,
+                  offset: const Offset(0, 20),
+                  spreadRadius: 0,
                 ),
               ],
             ),
@@ -45,47 +59,114 @@ class GlassmorphicBottomNavBar extends StatelessWidget {
                 final item = entry.value;
                 final isSelected = index == currentIndex;
 
-                return GestureDetector(
-                  onTap: () => onTap(index),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: isSelected
-                          ? Colors.white.withOpacity(0.2)
-                          : Colors.transparent,
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          child: Icon(
-                            isSelected ? item.activeIcon : item.icon,
-                            color: isSelected
-                                ? Colors.white
-                                : Colors.white.withOpacity(0.6),
-                            size: 24,
-                          ),
-                        ),
-                        if (isSelected) ...[
-                          const SizedBox(width: 8),
-                          AnimatedDefaultTextStyle(
-                            duration: const Duration(milliseconds: 300),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
+                return Expanded(
+                  child: GestureDetector(
+                    onTap: () => onTap(index),
+                    behavior: HitTestBehavior.translucent,
+                    child: Container(
+                      height: 75,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          // Active background indicator
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 400),
+                            curve: Curves.easeInOutCubic,
+                            width: isSelected ? 65 : 0,
+                            height: isSelected ? 65 : 0,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              gradient: isSelected
+                                  ? LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        Colors.white.withOpacity(0.3),
+                                        Colors.white.withOpacity(0.1),
+                                      ],
+                                    )
+                                  : null,
+                              boxShadow: isSelected
+                                  ? [
+                                      BoxShadow(
+                                        color: Colors.white.withOpacity(0.2),
+                                        blurRadius: 15,
+                                        spreadRadius: 2,
+                                      ),
+                                    ]
+                                  : null,
                             ),
-                            child: Text(item.label),
                           ),
+                          
+                          // Content
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOutCubic,
+                            transform: Matrix4.identity()
+                              ..scale(isSelected ? 1.1 : 1.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // Icon with animated scale and color
+                                AnimatedContainer(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOutCubic,
+                                  child: Icon(
+                                    isSelected ? item.activeIcon : item.icon,
+                                    color: isSelected
+                                        ? Colors.white
+                                        : Colors.white.withOpacity(0.5),
+                                    size: isSelected ? 26 : 22,
+                                  ),
+                                ),
+                                
+                                // Label with fade animation
+                                const SizedBox(height: 4),
+                                AnimatedOpacity(
+                                  duration: const Duration(milliseconds: 300),
+                                  opacity: isSelected ? 1.0 : 0.6,
+                                  child: AnimatedDefaultTextStyle(
+                                    duration: const Duration(milliseconds: 300),
+                                    style: TextStyle(
+                                      color: isSelected
+                                          ? Colors.white
+                                          : Colors.white.withOpacity(0.5),
+                                      fontWeight: isSelected 
+                                          ? FontWeight.w600 
+                                          : FontWeight.w400,
+                                      fontSize: isSelected ? 12 : 10,
+                                      letterSpacing: 0.5,
+                                    ),
+                                    child: Text(
+                                      item.label,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          
+                          // Ripple effect overlay
+                          if (isSelected)
+                            Positioned.fill(
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 600),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25),
+                                  gradient: RadialGradient(
+                                    center: Alignment.center,
+                                    radius: 0.8,
+                                    colors: [
+                                      Colors.white.withOpacity(0.1),
+                                      Colors.transparent,
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
                         ],
-                      ],
+                      ),
                     ),
                   ),
                 );

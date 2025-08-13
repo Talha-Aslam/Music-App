@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'widgets/animated_gradient_background.dart';
 import 'screens/main_navigation_screen.dart';
 
@@ -9,7 +10,12 @@ void main() {
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarIconBrightness: Brightness.light,
     ),
+  );
+  SystemChrome.setEnabledSystemUIMode(
+    SystemUiMode.edgeToEdge,
   );
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -28,11 +34,21 @@ class MusiczzApp extends StatelessWidget {
       title: 'Musiczz',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: 'Montserrat',
+        fontFamily: GoogleFonts.poppins().fontFamily,
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: Colors.black,
+        scaffoldBackgroundColor: Colors.transparent,
         useMaterial3: true,
-        colorSchemeSeed: Colors.blue,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.purple,
+          brightness: Brightness.dark,
+        ).copyWith(
+          surface: Colors.transparent,
+          background: Colors.transparent,
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
       ),
       home: const MusicPlayerPage(),
     );
@@ -44,12 +60,8 @@ class MusicPlayerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: AnimatedGradientBackground(
-        child: SafeArea(
-          child: MainNavigationScreen(),
-        ),
-      ),
+    return AnimatedGradientBackground(
+      child: MainNavigationScreen(),
     );
   }
 }

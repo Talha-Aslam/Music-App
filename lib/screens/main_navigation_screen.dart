@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../screens/home_screen.dart';
+import '../screens/home_screen_enhanced.dart';
 import '../screens/music_player_screen.dart';
 import '../screens/library_screen.dart';
 import '../screens/settings_screen.dart';
@@ -20,7 +20,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   final List<BottomNavItem> _navItems = [
     const BottomNavItem(
       icon: Icons.home_outlined,
-      activeIcon: Icons.home,
+      activeIcon: Icons.home_rounded,
       label: 'Home',
     ),
     const BottomNavItem(
@@ -30,12 +30,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     ),
     const BottomNavItem(
       icon: Icons.library_music_outlined,
-      activeIcon: Icons.library_music,
+      activeIcon: Icons.library_music_rounded,
       label: 'Library',
     ),
     const BottomNavItem(
       icon: Icons.settings_outlined,
-      activeIcon: Icons.settings,
+      activeIcon: Icons.settings_rounded,
       label: 'Settings',
     ),
   ];
