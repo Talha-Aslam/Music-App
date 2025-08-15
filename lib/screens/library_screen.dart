@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/glassmorphic_container.dart';
 import '../services/audio_service.dart';
 import '../utils/helpers/album_art_generator.dart';
+import 'enhanced_playlist_screen.dart';
 
 class LibraryScreen extends StatefulWidget {
   final AudioService audioService;
@@ -29,7 +30,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
         .toList();
 
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.fromLTRB(
+          16.0, 16.0, 16.0, 120.0), // Added bottom padding for nav bar
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -50,6 +52,79 @@ class _LibraryScreenState extends State<LibraryScreen> {
               color: Colors.white.withOpacity(0.7),
             ),
           ),
+          const SizedBox(height: 24),
+
+          // Enhanced Playlist Button
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EnhancedPlaylistScreen(
+                    audioService: widget.audioService,
+                  ),
+                ),
+              );
+            },
+            child: GlassmorphicContainer(
+              width: double.infinity,
+              height: 80,
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Colors.purple.withOpacity(0.8),
+                          Colors.blue.withOpacity(0.8),
+                        ],
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.queue_music_rounded,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Enhanced Playlist',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white.withOpacity(0.95),
+                          ),
+                        ),
+                        Text(
+                          'View all songs with amazing UI',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white.withOpacity(0.7),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    color: Colors.white.withOpacity(0.7),
+                    size: 16,
+                  ),
+                ],
+              ),
+            ),
+          ),
+
           const SizedBox(height: 24),
 
           // Search Bar

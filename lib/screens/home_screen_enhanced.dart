@@ -6,6 +6,7 @@ import 'package:glassmorphism/glassmorphism.dart' as gm;
 import 'package:google_fonts/google_fonts.dart';
 import '../services/audio_service.dart';
 import '../widgets/glassmorphic_container.dart' as gc;
+import 'enhanced_music_player_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final AudioService audioService;
@@ -392,36 +393,51 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       child: SlideAnimation(
         horizontalOffset: 100.0,
         child: FadeInAnimation(
-          child: Container(
-            width: 100,
-            margin: const EdgeInsets.only(right: 12),
-            child: gc.GlassmorphicContainer(
+          child: GestureDetector(
+            onTap: () async {
+              // Play the song and navigate to enhanced music player
+              await widget.audioService.loadSong(index);
+              widget.audioService.play();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EnhancedMusicPlayerScreen(
+                    audioService: widget.audioService,
+                  ),
+                ),
+              );
+            },
+            child: Container(
               width: 100,
-              height: 90, // Further reduced height
-              child: Padding(
-                padding: const EdgeInsets.all(6), // Minimal padding
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min, // Minimize size
-                  children: [
-                    const Icon(
-                      Icons.music_note_rounded,
-                      size: 20, // Smaller icon
-                      color: Colors.white,
-                    ),
-                    const SizedBox(height: 4), // Minimal spacing
-                    Text(
-                      fileName,
-                      style: GoogleFonts.poppins(
-                        fontSize: 8, // Much smaller font
+              margin: const EdgeInsets.only(right: 12),
+              child: gc.GlassmorphicContainer(
+                width: 100,
+                height: 90, // Further reduced height
+                child: Padding(
+                  padding: const EdgeInsets.all(6), // Minimal padding
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min, // Minimize size
+                    children: [
+                      const Icon(
+                        Icons.music_note_rounded,
+                        size: 20, // Smaller icon
                         color: Colors.white,
-                        fontWeight: FontWeight.w500,
                       ),
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+                      const SizedBox(height: 4), // Minimal spacing
+                      Text(
+                        fileName,
+                        style: GoogleFonts.poppins(
+                          fontSize: 8, // Much smaller font
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

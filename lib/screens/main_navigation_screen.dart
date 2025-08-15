@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../screens/home_screen_enhanced.dart';
-import '../screens/music_player_screen.dart';
+import '../screens/enhanced_music_player_screen.dart';
 import '../screens/library_screen.dart';
 import '../screens/settings_screen.dart';
 import '../widgets/glassmorphic_bottom_nav_bar.dart';
@@ -63,7 +63,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           index: _currentIndex,
           children: [
             HomeScreen(audioService: _audioService),
-            MusicPlayerScreen(audioService: _audioService),
+            EnhancedMusicPlayerScreen(audioService: _audioService),
             LibraryScreen(audioService: _audioService),
             const SettingsScreen(),
           ],

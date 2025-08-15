@@ -24,17 +24,17 @@ class _AnimatedGradientBackgroundState extends State<AnimatedGradientBackground>
   void initState() {
     super.initState();
 
-    // Main gradient animation
+    // Main gradient animation - increased speed
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 10),
+      duration: const Duration(seconds: 6), // Faster: was 10, now 6
     )..repeat(reverse: true);
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
 
-    // Secondary animation for more depth
+    // Secondary animation for more depth - increased speed
     _secondaryController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 15),
+      duration: const Duration(seconds: 9), // Faster: was 15, now 9
     )..repeat(reverse: true);
     _secondaryAnimation =
         CurvedAnimation(parent: _secondaryController, curve: Curves.easeInOut);
