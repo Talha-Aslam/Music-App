@@ -4,6 +4,7 @@ import '../screens/enhanced_music_player_screen.dart';
 import '../screens/library_screen.dart';
 import '../screens/settings_screen.dart';
 import '../widgets/glassmorphic_bottom_nav_bar.dart';
+import '../widgets/notification_playing_bar.dart';
 import '../services/audio_service.dart';
 
 class MainNavigationScreen extends StatefulWidget {
@@ -59,13 +60,27 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       body: SafeArea(
         bottom:
             false, // Don't apply safe area to bottom since we have custom nav
-        child: IndexedStack(
-          index: _currentIndex,
+        child: Stack(
           children: [
-            HomeScreen(audioService: _audioService),
-            EnhancedMusicPlayerScreen(audioService: _audioService),
-            LibraryScreen(audioService: _audioService),
-            const SettingsScreen(),
+            IndexedStack(
+              index: _currentIndex,
+              children: [
+                HomeScreen(audioService: _audioService),
+                EnhancedMusicPlayerScreen(audioService: _audioService),
+                LibraryScreen(audioService: _audioService),
+                SettingsScreen(audioService: _audioService),
+              ],
+            ),
+            // Notification playing bar
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: NotificationPlayingBar(
+                audioService: _audioService,
+                isPlayerScreenOpen: _currentIndex == 1, // Player tab index
+              ),
+            ),
           ],
         ),
       ),

@@ -29,8 +29,10 @@ class _CircularAudioSpectrumState extends State<CircularAudioSpectrum>
   late AnimationController _rotationController;
   late AnimationController _pulseController;
   late AnimationController _spectrumController;
+  late AnimationController _colorController; // Add color animation controller
   late Animation<double> _rotationAnimation;
   late Animation<double> _pulseAnimation;
+  late Animation<double> _colorAnimation; // Add color animation
 
   final List<double> _spectrumData =
       List.filled(48, 0.0); // Reduced from 60 to 48 for better performance
@@ -39,6 +41,7 @@ class _CircularAudioSpectrumState extends State<CircularAudioSpectrum>
     Colors.white,
     Colors.white70
   ]; // Cache dynamic colors
+  List<Color> _alternativeColors = []; // Alternative color set for transitions
 
   @override
   void initState() {
@@ -71,6 +74,19 @@ class _CircularAudioSpectrumState extends State<CircularAudioSpectrum>
       curve: Curves.easeInOut,
     ));
 
+    // Color transition animation for dynamic gradient changes
+    _colorController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 4), // 4-second color transitions
+    );
+    _colorAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _colorController,
+      curve: Curves.easeInOut,
+    ));
+
     // Optimized spectrum data animation - reduced frequency for smoother performance
     _spectrumController = AnimationController(
       vsync: this,
@@ -87,32 +103,66 @@ class _CircularAudioSpectrumState extends State<CircularAudioSpectrum>
     if (widget.songName != null) {
       _dynamicColors =
           AlbumArtGenerator.getGradientColorsFromSongName(widget.songName!);
+
+      // Generate alternative colors for smooth transitions using HSL
+      _alternativeColors = [
+        HSLColor.fromColor(_dynamicColors[0])
+            .withHue((HSLColor.fromColor(_dynamicColors[0]).hue + 60) % 360)
+            .toColor(),
+        _dynamicColors.length > 1
+            ? HSLColor.fromColor(_dynamicColors[1])
+                .withHue((HSLColor.fromColor(_dynamicColors[1]).hue + 60) % 360)
+                .toColor()
+            : HSLColor.fromColor(_dynamicColors[0])
+                .withHue(
+                    (HSLColor.fromColor(_dynamicColors[0]).hue + 120) % 360)
+                .toColor(),
+      ];
     } else {
       _dynamicColors = [Colors.white, Colors.white.withOpacity(0.7)];
+      _alternativeColors = [Colors.blue, Colors.purple];
     }
   }
 
   Color get _primarySpectrumColor {
     if (widget.spectrumColor != null) return widget.spectrumColor!;
-    return _dynamicColors.isNotEmpty ? _dynamicColors[0] : Colors.white;
+    // Blend between primary and alternative colors based on animation
+    return Color.lerp(
+          _dynamicColors.isNotEmpty ? _dynamicColors[0] : Colors.white,
+          _alternativeColors.isNotEmpty ? _alternativeColors[0] : Colors.blue,
+          _colorAnimation.value,
+        ) ??
+        Colors.white;
   }
 
   Color get _secondarySpectrumColor {
-    return _dynamicColors.length > 1
+    final primaryAlt = _dynamicColors.length > 1
         ? _dynamicColors[1]
-        : _primarySpectrumColor.withOpacity(0.7);
+        : _dynamicColors.isNotEmpty
+            ? _dynamicColors[0].withOpacity(0.7)
+            : Colors.white70;
+    final secondaryAlt = _alternativeColors.length > 1
+        ? _alternativeColors[1]
+        : _alternativeColors.isNotEmpty
+            ? _alternativeColors[0].withOpacity(0.7)
+            : Colors.purple.withOpacity(0.7);
+
+    return Color.lerp(primaryAlt, secondaryAlt, _colorAnimation.value) ??
+        Colors.white70;
   }
 
   void _startAnimations() {
     _rotationController.repeat();
     _pulseController.repeat(reverse: true);
     _spectrumController.repeat();
+    _colorController.repeat(reverse: true); // Add color animation
   }
 
   void _stopAnimations() {
     _rotationController.stop();
     _pulseController.stop();
     _spectrumController.stop();
+    _colorController.stop(); // Stop color animation
   }
 
   void _updateSpectrum() {
@@ -158,6 +208,7 @@ class _CircularAudioSpectrumState extends State<CircularAudioSpectrum>
     _rotationController.dispose();
     _pulseController.dispose();
     _spectrumController.dispose();
+    _colorController.dispose(); // Dispose color controller
     super.dispose();
   }
 
@@ -171,8 +222,11 @@ class _CircularAudioSpectrumState extends State<CircularAudioSpectrum>
         children: [
           // Circular audio spectrum
           AnimatedBuilder(
-            animation:
-                Listenable.merge([_rotationAnimation, _spectrumController]),
+            animation: Listenable.merge([
+              _rotationAnimation,
+              _spectrumController,
+              _colorAnimation // Add color animation to the listeners
+            ]),
             builder: (context, child) {
               return CustomPaint(
                 size: Size(widget.size, widget.size),
@@ -254,18 +308,33 @@ class CircularSpectrumPainter extends CustomPainter {
       final endX = center.dx + math.cos(angle) * (innerRadius + barHeight);
       final endY = center.dy + math.sin(angle) * (innerRadius + barHeight);
 
-      // Create enhanced gradient effect based on intensity and position
-      final normalizedAngle =
-          (angle + math.pi) / (2 * math.pi); // Normalize angle to 0-1
+      // Create dynamic gradient that flows around the circle
+      final normalizedAngle = (angle + math.pi) / (2 * math.pi);
+      final timeBasedShift =
+          (rotation / (2 * math.pi)) % 1.0; // 0-1 based on rotation
+      final shiftedAngle = (normalizedAngle + timeBasedShift) % 1.0;
+
+      // Create a rainbow-like flowing effect
+      final flowColor1 = Color.lerp(primaryColor, secondaryColor,
+              math.sin(shiftedAngle * math.pi * 2).abs()) ??
+          primaryColor;
+      final flowColor2 = Color.lerp(secondaryColor, primaryColor,
+              math.cos(shiftedAngle * math.pi * 2).abs()) ??
+          secondaryColor;
+
+      // Intensity-based color variations
+      final intensityColor1 =
+          Color.lerp(flowColor1, Colors.white, intensity * 0.3) ?? flowColor1;
+      final intensityColor2 =
+          Color.lerp(flowColor2, flowColor1, intensity * 0.5) ?? flowColor2;
+
       final gradientColors = [
-        Color.lerp(primaryColor, secondaryColor, normalizedAngle)!
-            .withOpacity(0.9),
-        Color.lerp(secondaryColor, primaryColor, normalizedAngle)!
-            .withOpacity(0.6),
-        primaryColor.withOpacity(0.3),
+        intensityColor1.withOpacity(0.9),
+        intensityColor2.withOpacity(0.7),
+        flowColor1.withOpacity(0.4),
       ];
 
-      // Paint the spectrum bar with enhanced gradient
+      // Paint the spectrum bar with flowing gradient
       final paint = Paint()
         ..shader = LinearGradient(
           colors: gradientColors,
@@ -275,8 +344,7 @@ class CircularSpectrumPainter extends CustomPainter {
           Offset(startX, startY),
           Offset(endX, endY),
         ))
-        ..strokeWidth =
-            2.5 + (intensity * 1.5) // Slightly reduced for smoothness
+        ..strokeWidth = 2.5 + (intensity * 1.5)
         ..strokeCap = StrokeCap.round;
 
       canvas.drawLine(
@@ -285,13 +353,13 @@ class CircularSpectrumPainter extends CustomPainter {
         paint,
       );
 
-      // Add optimized glow effect only for high intensity
-      if (intensity > 0.6) {
+      // Enhanced glow effect with color flow
+      if (intensity > 0.5) {
         final glowPaint = Paint()
-          ..color = primaryColor.withOpacity(0.2 * intensity)
-          ..strokeWidth = (2.5 + (intensity * 1.5)) * 1.5
+          ..color = intensityColor1.withOpacity(0.3 * intensity)
+          ..strokeWidth = (2.5 + (intensity * 1.5)) * 1.8
           ..strokeCap = StrokeCap.round
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2);
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3);
 
         canvas.drawLine(
           Offset(startX, startY),
